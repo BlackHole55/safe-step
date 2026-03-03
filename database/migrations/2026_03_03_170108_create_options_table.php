@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('step_id')->constrained('steps')->onDelete('cascade');
             $table->foreignId('next_step_id')->nullable()->constrained('steps');
             $table->string('text');
+            $table->text('feedback')->nullable();
             $table->integer('score_points')->default(0);
             $table->boolean('is_correct');
             $table->timestamps();
