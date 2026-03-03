@@ -95,14 +95,14 @@ class ScenarioSeeder extends Seeder
 
         foreach ($navigation as $currentSlug => $options) {
             foreach ($options as $optionData) {
-                Option::create({
+                Option::create([
                     'step_id' => $steps[$currentSlug]->id,
                     'next_step_id' => $steps[$optionData['next']]->id,
                     'text' => $optionData['text'],
                     'feedback' => $optionData['fb'],
                     'is_correct' => $optionData['correct'],
                     'score_points' => $optionData['points'],
-                });
+                ]);
             }
         }
     }
