@@ -84,13 +84,13 @@ class ScenarioSeeder extends Seeder
                 ['text' => 'В машину у дома', 'next' => 'aftershocks', 'correct' => false, 'points' => 0, 'fb' => 'Здание может обрушиться прямо на ваш автомобиль.'],
             ],
             'aftershocks' => [
-                ['text' => 'Доверять 112', 'next' => 'survived', 'correct' => true, 'points' => 10, 'fb' => 'Информационная гигиена спасает от паники.'],
+                ['text' => 'Доверять 112', 'next' => 'succeed', 'correct' => true, 'points' => 10, 'fb' => 'Информационная гигиена спасает от паники.'],
                 ['text' => 'Вернуться домой', 'next' => 'failed', 'correct' => false, 'points' => 0, 'fb' => 'Афтершоки часто сильнее первых толчков. Входить в здание нельзя!'],
             ],
             'failed' => [
                 ['text' => 'Начать заново', 'next' => 'intro', 'correct' => true, 'points' => 0, 'fb' => 'Удачи! В этот раз будьте внимательнее.'],
             ],
-            'survived' => [
+            'succeed' => [
                 ['text' => 'Повторить квиз', 'next' => 'intro', 'correct' => true, 'points' => 0, 'fb' => 'Закрепление знаний — ключ к безопасности.'],
             ],
         ];
