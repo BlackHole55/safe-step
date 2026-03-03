@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Step;
+use App\Models\Option;
 
 class ScenarioSeeder extends Seeder
 {
