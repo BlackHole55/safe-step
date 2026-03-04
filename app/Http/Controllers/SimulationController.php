@@ -42,6 +42,6 @@ class SimulationController extends Controller
             $validated['option_id']
         );
 
-        return response()->json($result)
+        return response()->json($result);
     }
 }
