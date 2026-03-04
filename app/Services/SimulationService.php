@@ -42,7 +42,7 @@ class SuminationService
             'feedback' => $option->feedback,
             'is_correct' => $option->is_correct,
             'next_step' => $nextStep
-        ]
+        ];
     }
 
     public function updateSession($session, $nextStepId, $points, $chosenText) 

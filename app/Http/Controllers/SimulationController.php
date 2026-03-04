@@ -12,7 +12,7 @@ class SimulationController extends Controller
 {
     protected $simulationService;
 
-    public function __contruct(SimulationService $service)
+    public function __construct(SimulationService $service)
     {
         $this->simulationService = $service;
     }
