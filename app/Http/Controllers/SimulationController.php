@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Step;
+use App\Models\SimulationSession;
 use App\Services\SimulationService;
 
 class SimulationController extends Controller
@@ -18,7 +21,7 @@ class SimulationController extends Controller
     {
         $firstStep = Step::where('slug', 'intro')->with('options')->firstOrFail();
 
-        $session = SimulatorSession::create([
+        $session = SimulationSession::create([
             'current_step_id' => $firstStep->id,
             'total_score' => 0,
             'journey_log' => []
