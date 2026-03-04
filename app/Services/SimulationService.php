@@ -7,7 +7,7 @@ use App\Models\Option;
 use App\Models\Step;
 use Carbon\Carbon;
 
-class SuminationService 
+class SimulationService 
 {
     public function processAnswer(string $sessionUuid, int $optionId)
     {
