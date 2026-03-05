@@ -87,12 +87,6 @@ class ScenarioSeeder extends Seeder
                 ['text' => 'Доверять 112', 'next' => 'succeed', 'correct' => true, 'points' => 10, 'fb' => 'Информационная гигиена спасает от паники.'],
                 ['text' => 'Вернуться домой', 'next' => 'failed', 'correct' => false, 'points' => 0, 'fb' => 'Афтершоки часто сильнее первых толчков. Входить в здание нельзя!'],
             ],
-            'failed' => [
-                ['text' => 'Начать заново', 'next' => null, 'correct' => true, 'points' => 0, 'fb' => 'Удачи! В этот раз будьте внимательнее.'],
-            ],
-            'succeed' => [
-                ['text' => 'Повторить квиз', 'next' => null, 'correct' => true, 'points' => 0, 'fb' => 'Закрепление знаний — ключ к безопасности.'],
-            ],
         ];
 
         foreach ($navigation as $currentSlug => $options) {
