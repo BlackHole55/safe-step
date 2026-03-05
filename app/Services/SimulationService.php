@@ -32,25 +32,42 @@ class SimulationService
             $this->updateSession($session, $failStep->id, 0, 'Время вышло! В реальности секунды решают всё.');
             
             return [
+                'is_finished' => false,
+                'is_victory' => false,
                 'feedback' => 'Вы не успели принять решение! В условиях землетрясения промедление опасно.',
                 'is_correct' => false,
                 'next_step' => $failStep->load('options')
             ];
         }
 
+        $isFinalAction = is_null($option->next_step_id);
+
+        $isVictory = false;
+
+        if ($option->next_step_id) {
+            $nextStepObj = Step::find($option->next_step_id);
+            $isVictory = ($nextStepObj && $nextStepObj->slug === 'succeed');
+        } elseif ($isFinalAction && $session->currentStep->slug === 'succeed') {
+            $isVictory = true;
+        }
+
+        $this->updateSession($session, $option->next_step_id, $option->score_points, $option->text);
+
         $nextStep = $option->next_step_id 
             ? Step::where('id', $option->next_step_id)->with('options')->first()
             : null;
-        $this->updateSession($session, $option->next_step_id, $option->score_points, $option->text);
 
         return [
+            'is_finished' => $isFinalAction,
+            'is_victory' => $isVictory,
             'feedback' => $option->feedback,
             'is_correct' => $option->is_correct,
-            'next_step' => $nextStep
+            'next_step' => $nextStep,
+            'total_score' => $session->fresh()->total_score
         ];
     }
 
-    public function updateSession($session, $nextStepId, $points, $chosenText) 
+    public function updateSession($session, $nextStepId, $points, $chosenText, $isVictory = false) 
     {
         $log = $session->journey_log ?? [];
         $log[] = [
@@ -65,7 +82,9 @@ class SimulationService
             'current_step_id' => $nextStepId,
             'total_score' => ($session->total_scores ?? 0) + $points,
             'journey_log' => $log,
-            'completed_at' => $isFinal ? now() : null,
+            // $session->completed_at for not rewriting completed_at, in case of lag query
+            'completed_at' => $isFinal ? now() : $session->completed_at,
+            'is_victory' => $isVictory,
         ]);
     }
 }
