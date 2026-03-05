@@ -38,8 +38,10 @@ class SimulationService
             ];
         }
 
-        $nextStep = Step::where('id', $option->next_step_id)->with('options')->first();
-        $this->updateSession($session, $nextStep->id, $option->score_points, $option->text);
+        $nextStep = $option->next_step_id 
+            ? Step::where('id', $option->next_step_id)->with('options')->first()
+            : null;
+        $this->updateSession($session, $option->next_step_id, $option->score_points, $option->text);
 
         return [
             'feedback' => $option->feedback,
@@ -57,10 +59,13 @@ class SimulationService
             'timestamp' => now()
         ];
 
+        $isFinal = is_null($nextStepId);
+
         $session->update([
             'current_step_id' => $nextStepId,
-            'total_score' => $session->total_scores + $points,
-            'journey_log' => $log
+            'total_score' => ($session->total_scores ?? 0) + $points,
+            'journey_log' => $log,
+            'completed_at' => $isFinal ? now() : null,
         ]);
     }
 }
