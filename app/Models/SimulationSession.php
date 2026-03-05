@@ -18,6 +18,13 @@ class SimulationSession extends Model
         'journey_log' => 'array',
     ];
 
+    protected $appends = ['is_finished'];
+
+    public function getIsFinishedAttribute()
+    {
+        return $this->completed_at !== null;
+    }
+
     protected static function booted()
     {
         static::creating(function ($session) {
