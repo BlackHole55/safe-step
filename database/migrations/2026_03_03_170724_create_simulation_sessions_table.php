@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('current_step_id')->constrained('steps');
             $table->jsonb('journey_log')->default('[]');
             $table->integer('total_score')->default(0);
+            $table->timestamp('completed_at')->nullable();
+            $table->boolean('is_victory')->default(false);
             $table->timestamps();
         });
     }
