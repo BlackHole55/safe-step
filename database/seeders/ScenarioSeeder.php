@@ -88,18 +88,23 @@ class ScenarioSeeder extends Seeder
                 ['text' => 'Вернуться домой', 'next' => 'failed', 'correct' => false, 'points' => 0, 'fb' => 'Афтершоки часто сильнее первых толчков. Входить в здание нельзя!'],
             ],
             'failed' => [
-                ['text' => 'Начать заново', 'next' => 'intro', 'correct' => true, 'points' => 0, 'fb' => 'Удачи! В этот раз будьте внимательнее.'],
+                ['text' => 'Начать заново', 'next' => null, 'correct' => true, 'points' => 0, 'fb' => 'Удачи! В этот раз будьте внимательнее.'],
             ],
             'succeed' => [
-                ['text' => 'Повторить квиз', 'next' => 'intro', 'correct' => true, 'points' => 0, 'fb' => 'Закрепление знаний — ключ к безопасности.'],
+                ['text' => 'Повторить квиз', 'next' => null, 'correct' => true, 'points' => 0, 'fb' => 'Закрепление знаний — ключ к безопасности.'],
             ],
         ];
 
         foreach ($navigation as $currentSlug => $options) {
             foreach ($options as $optionData) {
+                $nextStepId = null;
+                if (isset($optionData['next']) && $optionData['next'] !== null) {
+                    $nextStepId = $steps[$optionData['next']]->id;
+                }
+
                 Option::create([
                     'step_id' => $steps[$currentSlug]->id,
-                    'next_step_id' => $steps[$optionData['next']]->id,
+                    'next_step_id' => $nextStepId,
                     'text' => $optionData['text'],
                     'feedback' => $optionData['fb'],
                     'is_correct' => $optionData['correct'],
