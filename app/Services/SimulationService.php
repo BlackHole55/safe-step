@@ -29,33 +29,29 @@ class SimulationService
 
         if ($isTimeout) {
             $failStep = Step::where('slug', 'failed')->first();
-            $this->updateSession($session, $failStep->id, 0, 'Время вышло! В реальности секунды решают всё.');
+            $this->updateSession($session, $failStep->id, 0, 'Время вышло! В реальности секунды решают всё.', false, true);
             
             return [
-                'is_finished' => false,
+                'is_finished' => true,
                 'is_victory' => false,
                 'feedback' => 'Вы не успели принять решение! В условиях землетрясения промедление опасно.',
                 'is_correct' => false,
-                'next_step' => $failStep->load('options')
+                'next_step' => $failStep->load('options'),
+                'total_score' => $session->fresh()->total_score
             ];
         }
-
-        $isFinalAction = is_null($option->next_step_id);
-
-        $isVictory = false;
-
-        if ($option->next_step_id) {
-            $nextStepObj = Step::find($option->next_step_id);
-            $isVictory = ($nextStepObj && $nextStepObj->slug === 'succeed');
-        } elseif ($isFinalAction && $session->currentStep->slug === 'succeed') {
-            $isVictory = true;
-        }
-
-        $this->updateSession($session, $option->next_step_id, $option->score_points, $option->text);
 
         $nextStep = $option->next_step_id 
             ? Step::where('id', $option->next_step_id)->with('options')->first()
             : null;
+
+        $isTerminalStep = $nextStep && in_array($nextStep->slug, ['failed', 'succeed']);
+        $isFinalAction = is_null($option->next_step_id) || $isTerminalStep;
+
+        $isVictory = ($nextStep && $nextStep->slug === 'succeed') ||
+                     ($isFinalAction && $session->currentStep->slug === 'succeed');
+
+        $this->updateSession($session, $option->next_step_id, $option->score_points, $option->text, $isVictory, $isFinalAction);
 
         return [
             'is_finished' => $isFinalAction,
@@ -67,16 +63,14 @@ class SimulationService
         ];
     }
 
-    public function updateSession($session, $nextStepId, $points, $chosenText, $isVictory = false) 
+    public function updateSession($session, $nextStepId, $points, $chosenText, $isVictory = false, $isFinal = false) 
     {
         $log = $session->journey_log ?? [];
         $log[] = [
             'step' => $session->currentStep->slug,
-            'anwer' => $chosenText,
+            'answer' => $chosenText,
             'timestamp' => now()
         ];
-
-        $isFinal = is_null($nextStepId);
 
         $session->update([
             'current_step_id' => $nextStepId,
