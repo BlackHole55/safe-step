@@ -19,7 +19,10 @@ class SimulationService
             $startTime = $session->updated_at;
             $now = Carbon::now();
 
-            if ($now->diffInSeconds($startTime) > $session->currentStep->time_limit) {
+            $gracePeriod = 2;
+            $time_limit_grace = $session->currentStep->time_limit + $gracePeriod;
+
+            if ($now->diffInSeconds($startTime) > $time_limit_grace) {
                 $isTimeout = true;
             }
         }
