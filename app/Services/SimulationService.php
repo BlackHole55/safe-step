@@ -74,7 +74,7 @@ class SimulationService
 
         $session->update([
             'current_step_id' => $nextStepId,
-            'total_score' => ($session->total_scores ?? 0) + $points,
+            'total_score' => ($session->total_score ?? 0) + $points,
             'journey_log' => $log,
             // $session->completed_at for not rewriting completed_at, in case of lag query
             'completed_at' => $isFinal ? now() : $session->completed_at,
