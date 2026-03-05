@@ -21,10 +21,14 @@ class SimulationController extends Controller
     {
         $firstStep = Step::where('slug', 'intro')->with('options')->firstOrFail();
 
+        // Hardcoded for now
+        $maxPossibleScore = 90;
+
         $session = SimulationSession::create([
             'current_step_id' => $firstStep->id,
             'total_score' => 0,
-            'journey_log' => []
+            'journey_log' => [],
+            'max_possible_score' => $maxPossibleScore
         ]);
 
         return response()->json([

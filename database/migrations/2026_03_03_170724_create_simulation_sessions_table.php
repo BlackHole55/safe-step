@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('total_score')->default(0);
             $table->timestamp('completed_at')->nullable();
             $table->boolean('is_victory')->default(false);
+            $table->integer('max_possible_score');
             $table->timestamps();
         });
     }
