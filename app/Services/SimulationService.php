@@ -59,7 +59,8 @@ class SimulationService
             'feedback' => $option->feedback,
             'is_correct' => $option->is_correct,
             'next_step' => $nextStep,
-            'total_score' => $session->fresh()->total_score
+            'total_score' => $session->fresh()->total_score,
+            'score_percentage' => $session->fresh()->score_percentage,
         ];
     }
 
@@ -72,6 +73,12 @@ class SimulationService
             'timestamp' => now()
         ];
 
+        $newScore = ($session->total_score ?? 0) + $points;
+        $percentage = null;
+
+        $max = (int) ($session->max_possible_score ?? 1);        
+        $percentage  = round(($newScore / $max) * 100);
+
         $session->update([
             'current_step_id' => $nextStepId,
             'total_score' => ($session->total_score ?? 0) + $points,
@@ -79,6 +86,7 @@ class SimulationService
             // $session->completed_at for not rewriting completed_at, in case of lag query
             'completed_at' => $isFinal ? now() : $session->completed_at,
             'is_victory' => $isVictory,
+            'score_percentage' => $percentage,
         ]);
     }
 }
