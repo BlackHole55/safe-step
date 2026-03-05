@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->boolean('is_victory')->default(false);
             $table->integer('max_possible_score');
+            $table->integer('score_percentage')->nullable();
             $table->timestamps();
         });
     }
