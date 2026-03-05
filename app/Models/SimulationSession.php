@@ -11,7 +11,9 @@ class SimulationSession extends Model
         'uuid',
         'current_step_id',
         'journey_log',
-        'total_score'
+        'total_score',
+        'max_possible_score',
+        'score_percentage'
     ];
 
     protected $casts = [
